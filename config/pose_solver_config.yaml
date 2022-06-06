@@ -1,0 +1,32 @@
+# specifies actual size of armors
+# unit: m
+armor_size:
+    small_width:  0.123
+    small_height: 0.06
+    large_width:  0.217
+    large_height: 0.06
+
+# specifies mapping of World coordinate from default(1, 2, 3) to designated
+# only x and y flags take roles
+# Ensure that x, y in [-3, 3] and x != y
+axis_mapping:
+    x: 1
+    y: 2
+
+input_mapping:
+    first:  1
+    second: 0
+    third:  3
+    fourth: 2
+    fifth: 4
+    sixth: 5
+    seventh: 6
+    eighth: 7
+    ninth: 8
+    tenth: 9
+    eleventh: 10
+    twelfth: 11
+    thirteenth: 12
+
+input_points:
+    points_num: 5
