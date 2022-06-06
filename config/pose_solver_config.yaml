@@ -22,11 +22,6 @@ input_mapping:
     sixth: 5
     seventh: 6
     eighth: 7
-    ninth: 8
-    tenth: 9
-    eleventh: 10
-    twelfth: 11
-    thirteenth: 12
 
 input_points:
     points_num: 5

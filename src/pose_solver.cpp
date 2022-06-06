@@ -88,27 +88,18 @@ void PoseSolver::impl(const rm_msgs::TargetDetection &target, const std::string 
 {
     this->runtime_info_[0] = target.pose.position.x;  // get the ROI x_offset
     this->runtime_info_[1] = target.pose.position.y;  // get the ROI y_offset
-    int8_t data[14 * 2];                              // data of 4 2D points
+    int16_t data[8 * 2];                              // data of 4 2D points
 
-    memcpy(&data[0], &target.pose.orientation.x, sizeof(int8_t) * 2);
-    memcpy(&data[2], &target.pose.orientation.x + sizeof(int8_t) * 2, sizeof(int8_t) * 2);
-    memcpy(&data[4], &target.pose.orientation.x + sizeof(int8_t) * 4, sizeof(int8_t) * 2);
-    memcpy(&data[6], &target.pose.orientation.x + sizeof(int8_t) * 8, sizeof(int8_t) * 2);
+    memcpy(&data[0], &target.pose.orientation.x, sizeof(int16_t) * 2);
+    memcpy(&data[2], &target.pose.orientation.x + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
+    memcpy(&data[4], &target.pose.orientation.y, sizeof(int16_t) * 2);
+    memcpy(&data[6], &target.pose.orientation.y + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
+    memcpy(&data[8], &target.pose.orientation.z, sizeof(int16_t) * 2);
+    memcpy(&data[10], &target.pose.orientation.z + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
+    memcpy(&data[12], &target.pose.orientation.w, sizeof(int16_t) * 2);
+    memcpy(&data[14], &target.pose.orientation.w + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
 
-    memcpy(&data[8], &target.pose.orientation.y, sizeof(int8_t) * 2);
-    memcpy(&data[10], &target.pose.orientation.y + sizeof(int8_t) * 2, sizeof(int8_t) * 2);
-    memcpy(&data[12], &target.pose.orientation.y + sizeof(int8_t) * 4, sizeof(int8_t) * 2);
-    memcpy(&data[14], &target.pose.orientation.y + sizeof(int8_t) * 8, sizeof(int8_t) * 2);
-
-    memcpy(&data[16], &target.pose.orientation.z, sizeof(int8_t) * 2);
-    memcpy(&data[18], &target.pose.orientation.z + sizeof(int8_t) * 2, sizeof(int8_t) * 2);
-    memcpy(&data[20], &target.pose.orientation.z + sizeof(int8_t) * 4, sizeof(int8_t) * 2);
-    memcpy(&data[22], &target.pose.orientation.z + sizeof(int8_t) * 8, sizeof(int8_t) * 2);
-
-    memcpy(&data[24], &target.pose.orientation.w, sizeof(int8_t) * 2);
-    memcpy(&data[26], &target.pose.orientation.w + sizeof(int8_t) * 2, sizeof(int8_t) * 2);
-
-    for (int i = 0;i < 14; i++)
+    for (int i = 0;i < 8 * 2; i++)
     {
         this->points_2dim_[i].x = data[2 * i];
         this->points_2dim_[i].y = data[2 * i + 1];
