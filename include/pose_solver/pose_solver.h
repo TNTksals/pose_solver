@@ -60,6 +60,7 @@ public:
     int runtime_info_[2];
 
     int points_num;
+    std::vector<cv::Point2d> points_2dim_ = std::vector<cv::Point2d>(14);
     //cv_bridge::CvImagePtr img_;
     ros::NodeHandle parent_nh_;
     ros::NodeHandle armor_size_nh_;  // node handle for taking armor_size
