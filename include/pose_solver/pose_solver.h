@@ -22,9 +22,7 @@
 class PoseSolver : public nodelet::Nodelet
 {
 public:
-    PoseSolver();
-
-    ~PoseSolver() = default;
+    PoseSolver() = default;
 
     void initialize(ros::NodeHandle &nh);
 
@@ -58,9 +56,8 @@ public:
 public:
     std_msgs::Header sync_;
     int runtime_info_[2];
-
     int points_num;
-    //cv_bridge::CvImagePtr img_;
+
     ros::NodeHandle parent_nh_;
     ros::NodeHandle armor_size_nh_;  // node handle for taking armor_size
     rm_msgs::TargetDetectionArray target_array_{};
@@ -78,6 +75,7 @@ public:
     std::vector<double> dist_coefficients_;
     ros::Publisher detection_pub_;
     int mapping_2D_[14];
+    // end variables that will hardly change
 
     sensor_msgs::CameraInfoConstPtr camera_info_{};
     ros::Subscriber camera_info_grabber_;

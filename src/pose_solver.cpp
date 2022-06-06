@@ -7,20 +7,17 @@
 
 PLUGINLIB_EXPORT_CLASS(PoseSolver, nodelet::Nodelet)
 
-PoseSolver::PoseSolver() : cam_intrinsic_mat_k_(3, 3, double{ 0 })
-{
-    this->target_array_.header.frame_id = "camera_optical_frame";
-}
-
 void PoseSolver::onInit()
 {
     ros::NodeHandle& nh = getPrivateNodeHandle();
     initialize(nh);
 }
 
-
 void PoseSolver::initialize(ros::NodeHandle& nh)
 {
+    cam_intrinsic_mat_k_ = cv::Mat_<double>(3, 3, double{ 0 });
+    this->target_array_.header.frame_id = "camera_optical_frame";
+
     camera_info_grabber_ = nh.subscribe<sensor_msgs::CameraInfo>("/galaxy_camera/camera_info", 10,
                            [&](const sensor_msgs::CameraInfoConstPtr& info) -> void { this->camera_info_ = info; });
     while (this->camera_info_ == nullptr && ros::ok())
@@ -54,6 +51,14 @@ void PoseSolver::paramReConfig()
     mapping_2D_[2] = this->template getParam<int>(mapping_2d_nh, "third", 3);
     mapping_2D_[3] = this->template getParam<int>(mapping_2d_nh, "fourth", 2);
     mapping_2D_[4] = this->template getParam<int>(mapping_2d_nh, "fifth", 4);
+    mapping_2D_[5] = this->template getParam<int>(mapping_2d_nh, "sixth", 5);
+    mapping_2D_[6] = this->template getParam<int>(mapping_2d_nh, "seventh", 6);
+    mapping_2D_[7] = this->template getParam<int>(mapping_2d_nh, "eighth", 7);
+    mapping_2D_[8] = this->template getParam<int>(mapping_2d_nh, "ninth", 8);
+    mapping_2D_[9] = this->template getParam<int>(mapping_2d_nh, "tenth", 9);
+    mapping_2D_[10] = this->template getParam<int>(mapping_2d_nh, "eleventh", 10);
+    mapping_2D_[11] = this->template getParam<int>(mapping_2d_nh, "twelfth", 11);
+    mapping_2D_[12] = this->template getParam<int>(mapping_2d_nh, "thirteenth", 12);
 }
 
 void PoseSolver::callback(const rm_msgs::TargetDetectionArray &targets)
@@ -62,7 +67,6 @@ void PoseSolver::callback(const rm_msgs::TargetDetectionArray &targets)
     this->target_array_.detections.clear();
 
     for (auto & target : targets.detections)
-    {
         switch (target.id)
         {
             case 1:
@@ -74,7 +78,6 @@ void PoseSolver::callback(const rm_msgs::TargetDetectionArray &targets)
                 impl(target, "small_height", "small_width");
                 break;
         }
-    }
     send2Ctl();
 }
 
@@ -147,11 +150,29 @@ inline void PoseSolver::initialize(std::vector<T> &points_2dim, const double &ta
     this->points_3d_.template emplace_back(cv::Point3d(-half_x,  half_y, 0));
     this->points_3d_.template emplace_back(cv::Point3d(half_x,  half_y, 0));
     this->points_3d_.template emplace_back(cv::Point3d(half_x, -half_y, 0));
+    this->points_3d_.template emplace_back(cv::Point3d(0, 0, 0));
+    this->points_3d_.template emplace_back(cv::Point3d(-half_x, 0, 0));
+    this->points_3d_.template emplace_back(cv::Point3d(0, -half_y, 0));
+    this->points_3d_.template emplace_back(cv::Point3d(half_x, 0, 0));
+    this->points_3d_.template emplace_back(cv::Point3d(0, half_y, 0));
+    this->points_3d_.template emplace_back(cv::Point3d(0, 0, 0));
+    this->points_3d_.template emplace_back(cv::Point3d(0, 0, 0));
+    this->points_3d_.template emplace_back(cv::Point3d(0, 0, 0));
+    this->points_3d_.template emplace_back(cv::Point3d(0, 0, 0));
 
     this->points_2d_.template emplace_back(points_2dim[mapping_2D_[0]].x, points_2dim[mapping_2D_[0]].y);
     this->points_2d_.template emplace_back(points_2dim[mapping_2D_[1]].x, points_2dim[mapping_2D_[1]].y);
     this->points_2d_.template emplace_back(points_2dim[mapping_2D_[2]].x, points_2dim[mapping_2D_[2]].y);
     this->points_2d_.template emplace_back(points_2dim[mapping_2D_[3]].x, points_2dim[mapping_2D_[3]].y);
+    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[4]].x, points_2dim[mapping_2D_[4]].y);
+    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[5]].x, points_2dim[mapping_2D_[5]].y);
+    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[6]].x, points_2dim[mapping_2D_[6]].y);
+    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[7]].x, points_2dim[mapping_2D_[7]].y);
+    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[8]].x, points_2dim[mapping_2D_[8]].y);
+    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[9]].x, points_2dim[mapping_2D_[9]].y);
+    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[10]].x, points_2dim[mapping_2D_[10]].y);
+    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[11]].x, points_2dim[mapping_2D_[11]].y);
+    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[12]].x, points_2dim[mapping_2D_[12]].y);
 }
 
 void PoseSolver::poseSolver()
@@ -159,8 +180,20 @@ void PoseSolver::poseSolver()
     cv::Mat_<double> r_vec(3, 1);
     cv::Mat_<double> t_vec(3, 1);
 
-    cv::solvePnP(points_3d_, points_2d_, cam_intrinsic_mat_k_,
+    std::vector<cv::Point3d>::const_iterator it_3d = points_3d_.begin();
+    std::vector<cv::Point2d>::const_iterator it_2d = points_2d_.begin();
+
+    std::vector<cv::Point3d> points_3d_4(it_3d, it_3d + 4);
+    std::vector<cv::Point2d> points_2d_4(it_2d, it_2d + 4);
+
+    std::vector<cv::Point3d> points_3d_multi(it_3d, it_3d + points_num);
+    std::vector<cv::Point2d> points_2d_multi(it_2d, it_2d + points_num);
+
+    cv::solvePnP(points_3d_4, points_2d_4, cam_intrinsic_mat_k_,
                  dist_coefficients_, r_vec, t_vec, false, cv::SOLVEPNP_AP3P);
+
+    cv::solvePnP(points_3d_multi, points_2d_multi, cam_intrinsic_mat_k_,
+                 dist_coefficients_, r_vec, t_vec, true, cv::SOLVEPNP_ITERATIVE);
 
     trans_vec_ = t_vec.reshape(1, 1);
 
