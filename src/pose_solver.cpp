@@ -65,7 +65,6 @@ void PoseSolver::callback(const rm_msgs::TargetDetectionArray &targets)
 {
     updateSync(targets);
     this->target_array_.detections.clear();
-
     for (auto & target : targets.detections)
         switch (target.id)
         {
@@ -91,27 +90,27 @@ void PoseSolver::impl(const rm_msgs::TargetDetection &target, const std::string 
 {
     this->runtime_info_[0] = target.pose.position.x;  // get the ROI x_offset
     this->runtime_info_[1] = target.pose.position.y;  // get the ROI y_offset
-    int32_t data[4 * 2];                        // data of 4 2D points
-    static_assert(sizeof(decltype(target.pose.orientation.x)) == sizeof(double) &&
-                  sizeof(decltype(target.pose.orientation.y)) == sizeof(double) &&
-                  sizeof(decltype(target.pose.orientation.z)) == sizeof(double) &&
-                  sizeof(decltype(target.pose.orientation.w)) == sizeof(double),
-                  "Insufficient size!");
-    memcpy(&data[0], &target.pose.orientation.x, sizeof(int32_t) * 2);
-    memcpy(&data[2], &target.pose.orientation.y, sizeof(int32_t) * 2);
-    memcpy(&data[4], &target.pose.orientation.z, sizeof(int32_t) * 2);
-    memcpy(&data[6], &target.pose.orientation.w, sizeof(int32_t) * 2);
-    std::vector<cv::Point2d> points_2dim(4);
-    // Convert the msg type target to std::vector<cv::Point_<>>
-    for (size_t i = 0; i < 4; ++i)
+
+    int16_t data[8 * 2];                              // data of 4 2D points
+    memcpy(&data[0], &target.pose.orientation.x, sizeof(int16_t) * 2);
+    memcpy(&data[2], &target.pose.orientation.x + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
+    memcpy(&data[4], &target.pose.orientation.y, sizeof(int16_t) * 2);
+    memcpy(&data[6], &target.pose.orientation.y + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
+    memcpy(&data[8], &target.pose.orientation.z, sizeof(int16_t) * 2);
+    memcpy(&data[10], &target.pose.orientation.z + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
+    memcpy(&data[12], &target.pose.orientation.w, sizeof(int16_t) * 2);
+    memcpy(&data[14], &target.pose.orientation.w + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
+
+    points_2dim_.clear();
+    for (int i = 0; i < 8; i++)
     {
-        points_2dim[i].x = data[2 * i];
-        points_2dim[i].y = data[2 * i + 1];
+        this->points_2dim_[i].x = data[2 * i];
+        this->points_2dim_[i].y = data[2 * i + 1];
     }
 
-    runtimeInfoInterpreter<>(points_2dim);
-    initialize<>(points_2dim, this->template getParam<>(armor_size_nh_, height, 0.06),
-                                        this->template getParam(armor_size_nh_, width, 0.123));
+    runtimeInfoInterpreter<>(points_2dim_);
+    initialize<>(points_2dim_, this->template getParam<>(armor_size_nh_, height, 0.06),
+                                  this->template getParam(armor_size_nh_, width, 0.123));
     poseSolver();
     append2TargetArray(target.id);
 }
@@ -154,11 +153,6 @@ inline void PoseSolver::initialize(std::vector<T> &points_2dim, const double &ta
     this->points_3d_.template emplace_back(cv::Point3d(-half_x, 0, 0));
     this->points_3d_.template emplace_back(cv::Point3d(0, -half_y, 0));
     this->points_3d_.template emplace_back(cv::Point3d(half_x, 0, 0));
-    this->points_3d_.template emplace_back(cv::Point3d(0, half_y, 0));
-    this->points_3d_.template emplace_back(cv::Point3d(0, 0, 0));
-    this->points_3d_.template emplace_back(cv::Point3d(0, 0, 0));
-    this->points_3d_.template emplace_back(cv::Point3d(0, 0, 0));
-    this->points_3d_.template emplace_back(cv::Point3d(0, 0, 0));
 
     this->points_2d_.template emplace_back(points_2dim[mapping_2D_[0]].x, points_2dim[mapping_2D_[0]].y);
     this->points_2d_.template emplace_back(points_2dim[mapping_2D_[1]].x, points_2dim[mapping_2D_[1]].y);
@@ -168,11 +162,6 @@ inline void PoseSolver::initialize(std::vector<T> &points_2dim, const double &ta
     this->points_2d_.template emplace_back(points_2dim[mapping_2D_[5]].x, points_2dim[mapping_2D_[5]].y);
     this->points_2d_.template emplace_back(points_2dim[mapping_2D_[6]].x, points_2dim[mapping_2D_[6]].y);
     this->points_2d_.template emplace_back(points_2dim[mapping_2D_[7]].x, points_2dim[mapping_2D_[7]].y);
-    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[8]].x, points_2dim[mapping_2D_[8]].y);
-    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[9]].x, points_2dim[mapping_2D_[9]].y);
-    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[10]].x, points_2dim[mapping_2D_[10]].y);
-    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[11]].x, points_2dim[mapping_2D_[11]].y);
-    this->points_2d_.template emplace_back(points_2dim[mapping_2D_[12]].x, points_2dim[mapping_2D_[12]].y);
 }
 
 void PoseSolver::poseSolver()

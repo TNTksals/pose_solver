@@ -63,6 +63,7 @@ public:
     rm_msgs::TargetDetectionArray target_array_{};
 
     // variables that may be frequently modified
+    std::vector<cv::Point2d> points_2dim_ = std::vector<cv::Point2d>(8);
     std::vector<cv::Point3d> points_3d_;
     std::vector<cv::Point2d> points_2d_;
     std::array<double, 4> quat_vec_;        // quaternion
