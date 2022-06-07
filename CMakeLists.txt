@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(pose_solver)
+project(rm_pose_solver)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -8,8 +8,8 @@ add_definitions(-Wall -Werror)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  pluginlib
   std_msgs
+  pluginlib
   dynamic_reconfigure
   geometry_msgs
   visualization_msgs
@@ -34,8 +34,8 @@ catkin_package(
   include
   CATKIN_DEPENDS
   roscpp
-  dynamic_reconfigure
   geometry_msgs
+  dynamic_reconfigure
   # message_generation
   rm_msgs
   rm_vision
@@ -50,11 +50,11 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
 )
 
-add_library(${PROJECT_NAME}
-  src/${PROJECT_NAME}.cpp
+add_library(pose_solver_plugin
+  src/pose_solver.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(pose_solver_plugin
   ${catkin_LIBRARIES}
   ${OpenCV_LIBS}
 )

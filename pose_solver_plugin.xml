@@ -1,9 +1,9 @@
 <library path="lib/librm_pose_solver">
-    <class name="pose_solver/PoseSolver"
+    <class name="rm_pose_solver/PoseSolver"
            type="rm_pose_solver::PoseSolver"
            base_class_type="nodelet::Nodelet">
         <description>
-            This is a nodelet
+            This is a nodelet.
         </description>
     </class>
 </library>
