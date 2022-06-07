@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <launch>
-    <node pkg="pose_solver" type="pose_solver_node" name="pose_solver_node" output="screen" >
+    <node pkg="nodelet" type="nodelet" name="pose_solver_node"
+          args="load pose_solver/PoseSolver $(arg manager_name)" >
         <rosparam file="$(find pose_solver)/config/pose_solver_config.yaml" command="load" />
     </node>
 </launch>
