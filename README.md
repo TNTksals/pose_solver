@@ -1,2 +1,2 @@
-# rm_pose_solver
-This a test respository.
+# pose_solver
+This is a test respository.
