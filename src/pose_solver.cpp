@@ -54,11 +54,6 @@ void PoseSolver::paramReConfig()
     mapping_2D_[5] = this->template getParam<int>(mapping_2d_nh, "sixth", 5);
     mapping_2D_[6] = this->template getParam<int>(mapping_2d_nh, "seventh", 6);
     mapping_2D_[7] = this->template getParam<int>(mapping_2d_nh, "eighth", 7);
-    mapping_2D_[8] = this->template getParam<int>(mapping_2d_nh, "ninth", 8);
-    mapping_2D_[9] = this->template getParam<int>(mapping_2d_nh, "tenth", 9);
-    mapping_2D_[10] = this->template getParam<int>(mapping_2d_nh, "eleventh", 10);
-    mapping_2D_[11] = this->template getParam<int>(mapping_2d_nh, "twelfth", 11);
-    mapping_2D_[12] = this->template getParam<int>(mapping_2d_nh, "thirteenth", 12);
 }
 
 void PoseSolver::callback(const rm_msgs::TargetDetectionArray &targets)
