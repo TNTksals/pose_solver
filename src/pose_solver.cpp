@@ -5,7 +5,10 @@
 #include "pose_solver/pose_solver.h"
 #include <pluginlib/class_list_macros.h>
 
-PLUGINLIB_EXPORT_CLASS(PoseSolver, nodelet::Nodelet)
+PLUGINLIB_EXPORT_CLASS(rm_pose_solver::PoseSolver, nodelet::Nodelet)
+
+namespace rm_pose_solver
+{
 
 void PoseSolver::onInit()
 {
@@ -226,4 +229,4 @@ void PoseSolver::send2Ctl()
     detection_pub_.publish(this->target_array_);
 }
 
-
+}  // namespace rm_pose_solver

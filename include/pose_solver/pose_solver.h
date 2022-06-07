@@ -19,6 +19,9 @@
 #include <vector>
 #include <array>
 
+namespace rm_pose_solver
+{
+
 class PoseSolver : public nodelet::Nodelet
 {
 public:
@@ -90,3 +93,5 @@ public:
         return param_val;
     }
 };
+
+}  // namespace rm_pose_solver

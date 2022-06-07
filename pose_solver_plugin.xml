@@ -1,6 +1,6 @@
-<library path="lib/libpose_solver">
+<library path="lib/librm_pose_solver">
     <class name="pose_solver/PoseSolver"
-           type="PoseSolver"
+           type="rm_pose_solver::PoseSolver"
            base_class_type="nodelet::Nodelet">
         <description>
             This is a nodelet
