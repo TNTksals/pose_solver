@@ -2,7 +2,7 @@
 // Created by ksals on 2022/6/6.
 //
 
-#include "pose_solver/pose_solver.h"
+#include "rm_pose_solver/pose_solver.h"
 #include <pluginlib/class_list_macros.h>
 
 PLUGINLIB_EXPORT_CLASS(rm_pose_solver::PoseSolver, nodelet::Nodelet)
@@ -107,8 +107,8 @@ void PoseSolver::impl(const rm_msgs::TargetDetection &target, const std::string 
     }
 
     runtimeInfoInterpreter<>(points_2dim_);
-    initialize<>(points_2dim_, this->template getParam<>(armor_size_nh_, height, 0.06),
-                                  this->template getParam(armor_size_nh_, width, 0.123));
+    initialize<>(points_2dim_, this->template getParam<>(armor_size_nh_, height, 0.055),
+                                  this->template getParam(armor_size_nh_, width, 0.135));
     poseSolver();
     append2TargetArray(target.id);
 }
