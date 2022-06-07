@@ -2,7 +2,7 @@
 // Created by ksals on 2022/6/6.
 //
 
-#include "rm_pose_solver/pose_solver.h"
+#include "pose_solver/pose_solver.h"
 #include <pluginlib/class_list_macros.h>
 
 PLUGINLIB_EXPORT_CLASS(rm_pose_solver::PoseSolver, nodelet::Nodelet)
@@ -227,4 +227,4 @@ void PoseSolver::send2Ctl()
     detection_pub_.publish(this->target_array_);
 }
 
-}  // namespace rm_pose_solver
+}  // namespace pose_solver

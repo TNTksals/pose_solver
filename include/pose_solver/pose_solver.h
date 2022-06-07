@@ -94,4 +94,4 @@ public:
     }
 };
 
-}  // namespace rm_pose_solver
+}  // namespace pose_solver

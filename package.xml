@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>rm_pose_solver</name>
+  <name>pose_solver</name>
   <version>7.0.0</version>
-  <description>The rm_pose_solver package</description>
+  <description>The pose_solver package</description>
 
   <maintainer email="2217210958@qq.com">Ksals</maintainer>
 
