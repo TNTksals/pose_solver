@@ -222,8 +222,6 @@ void PoseSolver::append2TargetArray(const int &target_label)
 
 void PoseSolver::send2Ctl()
 {
-    if (target_array_.detections.empty())
-        return;
     this->target_array_.header.stamp = this->sync_.stamp;
     this->target_array_.header.seq = this->sync_.seq;
     detection_pub_.publish(this->target_array_);

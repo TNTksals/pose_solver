@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <launch>
+    <arg name="manager_name" default="nodelet_manager" />
+    <node pkg="nodelet" type="nodelet" name="$(arg manager_name)" args="manager" output="screen" >
+        <param name="num_worker_threads" value="8" />
+    </node>
+
     <node pkg="nodelet" type="nodelet" name="pose_solver_node"
           args="load rm_pose_solver/PoseSolver $(arg manager_name)" >
         <rosparam file="$(find rm_pose_solver)/config/pose_solver_config.yaml" command="load" />
