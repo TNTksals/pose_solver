@@ -78,7 +78,7 @@ public:
     cv::Mat_<double> cam_intrinsic_mat_k_;
     std::vector<double> dist_coefficients_;
     ros::Publisher detection_pub_;
-    int mapping_2D_[14];
+    int mapping_2D_[8];
     // end variables that will hardly change
 
     sensor_msgs::CameraInfoConstPtr camera_info_{};
