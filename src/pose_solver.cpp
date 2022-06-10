@@ -90,14 +90,10 @@ void PoseSolver::impl(const rm_msgs::TargetDetection &target, const std::string 
     this->runtime_info_[1] = target.pose.position.y;  // get the ROI y_offset
 
     int16_t data[8 * 2];                              // data of 4 2D points
-    memcpy(&data[0], &target.pose.orientation.x, sizeof(int16_t) * 2);
-    memcpy(&data[2], &target.pose.orientation.x + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
-    memcpy(&data[4], &target.pose.orientation.y, sizeof(int16_t) * 2);
-    memcpy(&data[6], &target.pose.orientation.y + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
-    memcpy(&data[8], &target.pose.orientation.z, sizeof(int16_t) * 2);
-    memcpy(&data[10], &target.pose.orientation.z + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
-    memcpy(&data[12], &target.pose.orientation.w, sizeof(int16_t) * 2);
-    memcpy(&data[14], &target.pose.orientation.w + sizeof(int16_t) * 2, sizeof(int16_t) * 2);
+    memcpy(&data[0], &target.pose.orientation.x, sizeof(int16_t) * 4);
+    memcpy(&data[4], &target.pose.orientation.y, sizeof(int16_t) * 4);
+    memcpy(&data[8], &target.pose.orientation.z, sizeof(int16_t) * 4);
+    memcpy(&data[12], &target.pose.orientation.w, sizeof(int16_t) * 4);
 
     points_2dim_.clear();
     for (int i = 0; i < 8; i++)
